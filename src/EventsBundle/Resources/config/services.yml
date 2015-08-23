@@ -1,0 +1,35 @@
+services:
+#    events.example:
+#        class: EventsBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    events.logger:
+        class:     EventsBundle\Classes\library\LogWriter
+        arguments: ["@logger"]
+
+    events.helloWorld:
+        class:     EventsBundle\Classes\principal\HelloWorld
+
+    events.greet.service:
+        class:     EventsBundle\Classes\services\GreetService
+        arguments: ["@events.helloWorld"]
+        calls:
+            - [setContainer, ["@service_container"]]
+
+    events.default.subscriber:
+        class: EventsBundle\Classes\events\EventListeners\DefaultEventListener
+        arguments: ["@events.logger"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    events.user_ip.listener:
+        class: EventsBundle\Classes\events\EventListeners\greet\GreetIpListener
+        arguments: ["@request_stack"]
+        tags:
+            - { name: kernel.event_listener, event: greet.submitted, method: onGreetSubmitted, priority: 1  }
+
+    events.log.listener:
+        class: EventsBundle\Classes\events\EventListeners\greet\GreetLogListener
+        arguments: ["@events.logger"]
+        tags:
+            - { name: kernel.event_listener, event: greet.submitted, method: onGreetSubmitted, priority: 0}

@@ -1,0 +1,15 @@
+events_homepage:
+    path:     /
+    defaults: { _controller: EventsBundle:Default:index }
+
+events_hello:
+    path:     /hello/{name}
+    defaults: { _controller: EventsBundle:Default:hello }
+
+events_exception:
+    path:     /exception
+    defaults: { _controller: EventsBundle:Default:exception }
+
+events_view:
+    path:     /view
+    defaults: { _controller: EventsBundle:Default:view }
